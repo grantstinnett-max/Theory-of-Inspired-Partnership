@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One project, or fifteen</title>
+<meta name="description" content="How our energy turns into finished projects, and what changes when we hand the work we're not built for to partners who are.">
+<meta property="og:title" content="One project, or fifteen">
+<meta property="og:description" content="Move the fader to see what changes when everyone works in their zone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+    /* Whiteprint: diazo-blue ink on cool drafting paper */
+    --paper: #F0F2EE;
+    --ink: #1F2D5C;
+    --ink-2: #4A5682;
+    --ink-3: #98A1BC;
+    --rule: #C9CFDC;
+    --yellow: #F2BE0C;
+    --yellow-wash: rgba(242, 190, 12, .30);
+    --green: #1E9A73;
+    --tint: #D8DEEB;
+    --lift: rgba(20, 32, 80, .28);
+    --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      /* Blueprint: white line on blue */
+      --paper: #16355F;
+      --ink: #EEF3FA;
+      --ink-2: #B7C7E0;
+      --ink-3: #6D88B3;
+      --rule: #33558A;
+      --yellow: #F6CC3C;
+      --yellow-wash: rgba(246, 204, 60, .26);
+      --green: #58CFA3;
+      --tint: #244B82;
+      --lift: rgba(0, 8, 30, .55);
+    }
+    :root:not([data-theme="light"]) .band-y { fill: url(#shade-y); }
+  }
+  :root[data-theme="dark"] .band-y { fill: url(#shade-y); }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper: #16355F;
+    --ink: #EEF3FA;
+    --ink-2: #B7C7E0;
+    --ink-3: #6D88B3;
+    --rule: #33558A;
+    --yellow: #F6CC3C;
+    --yellow-wash: rgba(246, 204, 60, .26);
+    --green: #58CFA3;
+    --tint: #244B82;
+    --lift: rgba(0, 8, 30, .55);
+  }
+
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .hatch-bg { fill: var(--paper); }
+  .hatch-ln { stroke: var(--ink); stroke-width: 1.1; }
+  .hatch-ln-light { stroke: var(--ink-3); stroke-width: 1; }
+  .shade-ln { stroke: var(--yellow); stroke-width: 1.3; opacity: .8; }
+
+  .page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 40px max(20px, env(safe-area-inset-right, 0px)) 56px max(20px, env(safe-area-inset-left, 0px));
+  }
+
+  h1 {
+    margin: 0 0 16px;
+    max-width: 13ch;
+    font-size: clamp(2.2rem, 1.3rem + 3.6vw, 3.7rem);
+    font-stretch: 118%;
+    font-weight: 650;
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+  }
+  .lede {
+    margin: 0;
+    max-width: 33em;
+    font-size: clamp(1.02rem, .97rem + .3vw, 1.16rem);
+    color: var(--ink-2);
+  }
+
+  .part { margin-top: 36px; }
+  .title {
+    display: inline-block;
+    margin: 0 0 14px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--ink);
+    font-size: 1.02rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+
+  .fig { width: 100%; }
+  .fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .key { display: grid; gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .key li {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    column-gap: 10px;
+    font-size: .92rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .key b { color: var(--ink); font-weight: 650; }
+  .sw { width: 20px; height: 12px; margin-top: 4px; border: 1.25px solid var(--ink); }
+  .sw-y { background: var(--yellow); }
+  .sw-h { background: repeating-linear-gradient(-45deg, var(--ink) 0 1.1px, transparent 1.1px 4.6px); }
+  .sw-g { background: var(--green); }
+  @media (min-width: 760px) {
+    .key { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  }
+
+  /* The fader band stays pinned while you scroll the drawings */
+  #sentinel { height: 1px; margin-top: 29px; }
+  .band {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    margin: 0 -20px;
+    padding: 12px 20px 10px;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    transition: box-shadow .2s ease;
+  }
+  .band.stuck { box-shadow: 0 12px 22px -18px var(--lift); }
+  .ends {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: .9rem;
+    font-stretch: 85%;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+  .ends span:last-child { text-align: right; }
+
+  .fader { position: relative; height: 52px; }
+  .fader input {
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 52px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    --frac: 0;
+  }
+  .fader input:focus { outline: none; }
+  .fader input::-webkit-slider-runnable-track {
+    height: 8px;
+    border: 1.5px solid var(--ink);
+    border-radius: 1px;
+    background: linear-gradient(to right, var(--yellow) 0 calc(11px + (100% - 22px) * var(--frac)), var(--paper) 0);
+  }
+  .fader input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 40px;
+    margin-top: -16px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background:
+      linear-gradient(90deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+      var(--paper);
+    box-shadow: 0 2px 7px var(--lift);
+  }
+  .fader input::-moz-range-track {
+    height: 8px;
+    border: 1.5px solid var(--ink);
+    border-radius: 1px;
+    background: var(--paper);
+  }
+  .fader input::-moz-range-progress { height: 8px; background: var(--yellow); }
+  .fader input::-moz-range-thumb {
+    width: 18px;
+    height: 36px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background:
+      linear-gradient(90deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+      var(--paper);
+    box-shadow: 0 2px 7px var(--lift);
+  }
+  .fader input:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+  .fader input:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+  .ticks {
+    position: absolute;
+    left: 11px;
+    right: 11px;
+    top: 34px;
+    height: 8px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .ticks i { width: 1.25px; height: 5px; background: var(--ink-2); }
+  .ticks i:first-child, .ticks i:last-child, .ticks i:nth-child(8) { height: 8px; }
+  .nudge {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 22px;
+    height: 40px;
+    border: 2px solid var(--yellow);
+    border-radius: 5px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .band.untouched .nudge { animation: nudge 2.6s ease-out 1s infinite; }
+  @keyframes nudge {
+    0% { transform: translateX(0); opacity: .95; }
+    55% { transform: translateX(34px); opacity: 0; }
+    100% { transform: translateX(34px); opacity: 0; }
+  }
+  .readout { margin: 2px 0 0; min-height: 1.5em; font-size: .96rem; line-height: 1.4; }
+  .readout .hint { color: var(--ink-2); }
+
+  /* Drawing styles */
+  .bar-line { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+  .fill-y { fill: var(--yellow); }
+  .fill-g { fill: var(--green); }
+  .band-y { fill: var(--yellow-wash); }
+  .proj { fill: none; stroke: var(--ink-3); stroke-width: .9; }
+  .dim { fill: none; stroke: var(--ink-2); stroke-width: 1; }
+  .dim-text, .lab, .mult, .note-t { font-family: var(--sans); font-variant-numeric: tabular-nums; }
+  .dim-text { fill: var(--ink); font-size: 13px; font-stretch: 80%; font-weight: 650; }
+  .lab { fill: var(--ink-2); font-size: 13px; font-stretch: 80%; font-weight: 600; }
+  .mult { fill: var(--ink); font-size: 13.5px; font-stretch: 80%; font-weight: 750; }
+  .mult.soft { fill: var(--ink-2); font-weight: 650; }
+  .note-t { fill: var(--ink-2); font-size: 12.5px; font-stretch: 88%; }
+  .flow-fig { margin-top: 4px; }
+  .caption { margin: 10px 0 0; max-width: 40em; min-height: 3.1em; color: var(--ink-2); font-size: .98rem; }
+
+  .outcome {
+    margin: 0;
+    min-height: 1.3em;
+    font-size: clamp(1.3rem, 1.1rem + 1vw, 1.75rem);
+    font-weight: 560;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .year {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    max-width: 640px;
+    margin-top: 16px;
+  }
+  .play {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1.5px solid var(--ink);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .play svg { width: 14px; height: 14px; fill: currentColor; }
+  .play .i-play { display: none; }
+  .play.paused .i-play { display: block; }
+  .play.paused .i-pause { display: none; }
+  .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .axis-line { position: relative; height: 1.5px; margin-top: 8px; background: var(--ink-2); }
+  .axis-line::before, .axis-line::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 1.25px;
+    height: 9px;
+    background: var(--ink-2);
+  }
+  .axis-line::before { left: 0; }
+  .axis-line::after { right: 0; }
+  .axis-fill { position: absolute; left: 0; top: -3px; width: 0; height: 7px; background: var(--yellow); }
+  .axis-mark { position: absolute; left: 0; top: -7px; width: 2px; height: 15px; margin-left: -1px; background: var(--ink); }
+  .months { display: flex; margin-top: 8px; font-size: .74rem; font-stretch: 80%; font-weight: 600; color: var(--ink-2); line-height: 1; }
+  .months span { flex: 1; text-align: center; }
+  .count { margin: 0; font-size: .92rem; font-stretch: 85%; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .count b { color: var(--ink); font-size: 1.05rem; font-weight: 750; }
+
+  .street {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    row-gap: 16px;
+    max-width: 460px;
+    margin-top: 18px;
+    transition: opacity .2s ease;
+  }
+  .street.fading { opacity: .15; }
+  @media (min-width: 860px) {
+    .street { grid-template-columns: repeat(15, minmax(0, 1fr)); max-width: none; }
+  }
+  .house { display: block; width: 100%; height: auto; overflow: visible; }
+  .ground { stroke: var(--ink-2); stroke-width: 1.25; }
+  .h-tint { fill: var(--tint); opacity: 0; transition: opacity .35s ease; }
+  .h-hatch { transition: opacity .3s ease; }
+  .h-line { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; transition: stroke .3s ease; }
+  .h-detail { fill: none; stroke: var(--ink); stroke-width: 1; opacity: 0; transition: opacity .35s ease; }
+  .h-win { fill: none; stroke: var(--ink); stroke-width: 1; opacity: 0; transition: opacity .3s ease, fill .3s ease; }
+  .house.reach .h-line { stroke: var(--ink-3); stroke-dasharray: 2.4 2.4; }
+  .house.waiting .h-line { stroke: var(--ink-2); }
+  .house.done .h-tint { opacity: 1; }
+  .house.done .h-hatch { opacity: 0; }
+  .house.done .h-detail { opacity: 1; }
+  .house.done .h-win { opacity: 1; fill: var(--yellow); }
+  .street-note { margin: 14px 0 0; max-width: 44em; font-size: .9rem; color: var(--ink-2); }
+
+  .notes { max-width: 46em; }
+  .notes ol { margin: 0; padding-left: 1.4em; }
+  .notes li { margin: 0 0 10px; padding-left: .3em; color: var(--ink-2); }
+  .notes li::marker { color: var(--ink); font-weight: 750; }
+  .nts {
+    margin: 30px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: .9rem;
+    color: var(--ink-2);
+  }
+  .nts b { color: var(--ink); font-weight: 650; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .band.untouched .nudge { animation: none; }
+    .street, .h-tint, .h-hatch, .h-line, .h-detail, .h-win { transition: none; }
+  }
+</style>
+</head>
+<body>
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+      <rect class="hatch-bg" width="5" height="5"/>
+      <line class="hatch-ln" x1="2.5" y1="-1" x2="2.5" y2="6"/>
+    </pattern>
+    <pattern id="hatch-light" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <line class="hatch-ln-light" x1="3" y1="-1" x2="3" y2="7"/>
+    </pattern>
+    <pattern id="shade-y" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(-45)">
+      <line class="shade-ln" x1="2" y1="-1" x2="2" y2="5"/>
+    </pattern>
+  </defs>
+</svg>
+
+<main class="page">
+  <header>
+    <h1>One project, or fifteen</h1>
+    <p class="lede">How our energy turns into finished projects, and what changes when we hand the work we're not built for to partners who are.</p>
+  </header>
+
+  <section class="part" aria-labelledby="t-anatomy">
+    <h2 class="title" id="t-anatomy">Every project needs two kinds of work</h2>
+    <div class="fig" id="anatomy-fig"></div>
+    <ul class="key">
+      <li><span class="sw sw-y" aria-hidden="true"></span><span><b>Create &amp; connect.</b> Design, creative solutions, content and marketing, bringing people together. Our zone: about 3 back for every 1 we put in.</span></li>
+      <li><span class="sw sw-h" aria-hidden="true"></span><span><b>Build &amp; manage, done by us.</b> Construction, management, and the rest. Not our zone: we get back less than we put in.</span></li>
+      <li><span class="sw sw-g" aria-hidden="true"></span><span><b>Build &amp; manage, done by partners.</b> People who love that side of the work, getting their own 3 : 1.</span></li>
+    </ul>
+  </section>
+
+  <div id="sentinel" aria-hidden="true"></div>
+  <section class="band untouched" id="band" aria-label="Fader">
+    <div class="ends" aria-hidden="true"><span>We do everything ourselves</span><span>Everyone in their zone</span></div>
+    <div class="fader">
+      <input id="fader" type="range" min="1" max="15" step="1" value="1" aria-label="From doing everything ourselves to everyone working in their zone">
+      <div class="ticks" aria-hidden="true"></div>
+      <span class="nudge" aria-hidden="true"></span>
+    </div>
+    <p class="readout" aria-hidden="true"><span id="readout-text"></span><span class="hint" id="hint"> Drag the fader to bring in partners.</span></p>
+  </section>
+
+  <section class="part" aria-labelledby="t-energy">
+    <h2 class="title" id="t-energy">Where our energy goes</h2>
+    <div class="fig flow-fig" id="flow-fig"></div>
+    <p class="caption" id="caption"></p>
+  </section>
+
+  <section class="part" aria-labelledby="t-year">
+    <h2 class="title" id="t-year">A year of projects</h2>
+    <p class="outcome" id="outcome"></p>
+    <div class="year">
+      <button class="play" id="play" type="button" aria-label="Pause the year">
+        <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="2.6" height="10"/><rect x="9.4" y="3" width="2.6" height="10"/></svg>
+        <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10l8-5z"/></svg>
+      </button>
+      <div class="axis" aria-hidden="true">
+        <div class="axis-line"><span class="axis-fill" id="axis-fill"></span><span class="axis-mark" id="axis-mark"></span></div>
+        <div class="months"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span></div>
+      </div>
+      <p class="count" id="count"><b>0</b> finished</p>
+    </div>
+    <div class="street" id="street" aria-hidden="true"></div>
+    <p class="street-note">Dashed outlines are projects our energy could carry once partners take on the build &amp; manage.</p>
+  </section>
+
+  <section class="part notes" aria-labelledby="t-notes">
+    <h2 class="title" id="t-notes">How the numbers work</h2>
+    <ol>
+      <li>Every project is about 20 parts create &amp; connect and 80 parts build &amp; manage.</li>
+      <li>In our zone, each unit of our energy produces about three. Outside it, we get back less than we put in.</li>
+      <li>Say that doing it all ourselves, one project takes all of our energy for a year. We're fast at the 20 creative parts, so they use only about 7% of it. The other 93% goes into the 80 parts we're slow at, returning about 0.86 for every 1.</li>
+      <li>With all of our energy in our zone, 100 becomes 300 parts of create &amp; connect: enough for 15 projects at 20 parts each.</li>
+      <li>Partners carry the 80 build &amp; manage parts of each project in their own zone, at about 3 : 1. Total effort per project drops to about a third, so roughly 4 months instead of 12.</li>
+    </ol>
+    <p class="nts"><b>Not to scale.</b> The numbers illustrate the idea; they aren't a forecast.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ---------------- The model ----------------
+     Every project: 20 parts create & connect + 80 parts build & manage.
+     In our zone we get back 3 for every 1 we put in; partners get the same in theirs.
+     Calibrated so that doing everything ourselves, one project uses all of our energy for a year. */
+  const ZONE_RETURN = 3;
+  const PARTNER_RETURN = 3;
+  const CREATIVE = 20;
+  const BUILD = 80;
+  const E_CREATIVE = CREATIVE / ZONE_RETURN;             // ≈ 6.7% of our energy per project
+  const OUR_BUILD_RETURN = BUILD / (100 - E_CREATIVE);   // ≈ 0.86 back for every 1
+  const MAX_N = Math.round(100 * ZONE_RETURN / CREATIVE);  // 15
+
+  function model(n) {
+    const zone = Math.min(100, n * E_CREATIVE);          // % of our energy in our zone
+    const out = 100 - zone;                              // % spent outside it
+    const creativeOut = zone * ZONE_RETURN;
+    const buildOut = out * OUR_BUILD_RETURN;
+    const effect = creativeOut + buildOut;               // what our 100% produces
+    const buildNeeded = BUILD * n;
+    const partnerOut = Math.max(0, buildNeeded - buildOut);
+    const share = partnerOut / buildNeeded;              // build & manage carried by partners
+    const effort = E_CREATIVE + out / n + partnerOut / n / PARTNER_RETURN;
+    return { zone, out, creativeOut, buildOut, effect, share, months: 12 * effort / 100 };
+  }
+
+  /* ---------------- Helpers ---------------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (id) => document.getElementById(id);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const f = (v) => String(Math.round(v * 100) / 100);
+  function svgEl(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function setText(el, s) { if (el.textContent !== s) el.textContent = s; }
+  function setRect(el, x, y, w, h) {
+    el.setAttribute('x', f(x)); el.setAttribute('y', f(y));
+    el.setAttribute('width', f(Math.max(0, w))); el.setAttribute('height', f(h));
+  }
+  function place(el, x, y) { el.setAttribute('x', f(x)); el.setAttribute('y', f(y)); }
+  function oneDecimal(v) {
+    const r = Math.round(v * 10) / 10;
+    return Math.abs(r - Math.round(r)) < 0.05 ? String(Math.round(r)) : r.toFixed(1);
+  }
+  // Architectural dimension line: extension lines, the line itself, and 45° ticks.
+  function dimPath(xs, y, yObj) {
+    const dir = yObj > y ? 1 : -1;
+    let d = `M${f(xs[0])},${f(y)}H${f(xs[xs.length - 1])}`;
+    for (const x of xs) {
+      d += `M${f(x)},${f(y - 4 * dir)}V${f(yObj)}`;
+      d += `M${f(x - 3.5)},${f(y + 3.5)}L${f(x + 3.5)},${f(y - 3.5)}`;
+    }
+    return d;
+  }
+  function edgePath(t, b, y1, y2) {
+    const ym = (y1 + y2) / 2;
+    return `M${f(t)},${f(y1)}C${f(t)},${f(ym)} ${f(b)},${f(ym)} ${f(b)},${f(y2)}`;
+  }
+  function bandPath(t0, t1, b0, b1, y1, y2) {
+    const ym = (y1 + y2) / 2;
+    return `M${f(t0)},${f(y1)}C${f(t0)},${f(ym)} ${f(b0)},${f(ym)} ${f(b0)},${f(y2)}` +
+           `L${f(b1)},${f(y2)}C${f(b1)},${f(ym)} ${f(t1)},${f(ym)} ${f(t1)},${f(y1)}Z`;
+  }
+
+  const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------------- Elements ---------------- */
+  const fader = $('fader');
+  const band = $('band');
+  const readoutText = $('readout-text');
+  const caption = $('caption');
+  const outcome = $('outcome');
+  const countEl = $('count');
+  const axisFill = $('axis-fill');
+  const axisMark = $('axis-mark');
+  const playBtn = $('play');
+  const street = $('street');
+
+  const ticks = band.querySelector('.ticks');
+  for (let i = 0; i < MAX_N; i++) ticks.appendChild(document.createElement('i'));
+
+  /* ---------------- Drawing: project anatomy ---------------- */
+  const anatBox = $('anatomy-fig');
+  const aSvg = svgEl('svg', { 'aria-hidden': 'true', focusable: 'false' }, anatBox);
+  const aDim = svgEl('path', { class: 'dim' }, aSvg);
+  const aT1 = svgEl('text', { class: 'dim-text', 'text-anchor': 'middle' }, aSvg);
+  const aT2 = svgEl('text', { class: 'dim-text', 'text-anchor': 'middle' }, aSvg);
+  aT1.textContent = CREATIVE + '%';
+  aT2.textContent = BUILD + '%';
+  const aY = svgEl('rect', { class: 'fill-y' }, aSvg);
+  const aUs = svgEl('rect', { fill: 'url(#hatch)' }, aSvg);
+  const aP = svgEl('rect', { class: 'fill-g' }, aSvg);
+  const aDiv = svgEl('path', { class: 'bar-line' }, aSvg);
+  const aOut = svgEl('rect', { class: 'bar-line' }, aSvg);
+
+  function drawAnatomy(share) {
+    const W = anatBox.clientWidth;
+    if (!W) return;
+    const H = 48;
+    aSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    aSvg.setAttribute('width', W);
+    aSvg.setAttribute('height', H);
+    const x0 = 1, x1 = W - 1, w = x1 - x0, xs = x0 + w * CREATIVE / 100;
+    const yDim = 18, yBar = 27, hBar = 18;
+    aDim.setAttribute('d', dimPath([x0, xs, x1], yDim, yBar - 3));
+    place(aT1, (x0 + xs) / 2, yDim - 8);
+    place(aT2, (xs + x1) / 2, yDim - 8);
+    const wb = x1 - xs, wUs = wb * (1 - share);
+    setRect(aY, x0, yBar, xs - x0, hBar);
+    setRect(aUs, xs, yBar, wUs, hBar);
+    setRect(aP, xs + wUs, yBar, wb - wUs, hBar);
+    let d = `M${f(xs)},${yBar}V${yBar + hBar}`;
+    if (share > 0.002 && share < 0.998) d += `M${f(xs + wUs)},${yBar}V${yBar + hBar}`;
+    aDiv.setAttribute('d', d);
+    setRect(aOut, x0, yBar, w, hBar);
+  }
+
+  /* ---------------- Drawing: energy in, effect out ---------------- */
+  const flowBox = $('flow-fig');
+  const fSvg = svgEl('svg', { role: 'img', focusable: 'false' }, flowBox);
+  const fBandY = svgEl('path', { class: 'band-y' }, fSvg);
+  const fBandH = svgEl('path', { fill: 'url(#hatch-light)' }, fSvg);
+  const fEdges = svgEl('path', { class: 'proj' }, fSvg);
+  const fAY = svgEl('rect', { class: 'fill-y' }, fSvg);
+  const fAH = svgEl('rect', { fill: 'url(#hatch)' }, fSvg);
+  const fADiv = svgEl('path', { class: 'bar-line' }, fSvg);
+  const fAO = svgEl('rect', { class: 'bar-line' }, fSvg);
+  const fBY = svgEl('rect', { class: 'fill-y' }, fSvg);
+  const fBH = svgEl('rect', { fill: 'url(#hatch)' }, fSvg);
+  const fBDiv = svgEl('path', { class: 'bar-line' }, fSvg);
+  const fBO = svgEl('rect', { class: 'bar-line' }, fSvg);
+  const fDimA = svgEl('path', { class: 'dim' }, fSvg);
+  const fDimB = svgEl('path', { class: 'dim' }, fSvg);
+  const tDimA = svgEl('text', { class: 'dim-text', 'text-anchor': 'middle' }, fSvg);
+  const tDimB = svgEl('text', { class: 'dim-text', 'text-anchor': 'middle' }, fSvg);
+  const tNote = svgEl('text', { class: 'note-t', 'text-anchor': 'middle' }, fSvg);
+  const tIn = svgEl('text', { class: 'lab', 'text-anchor': 'end' }, fSvg);
+  const tOut = svgEl('text', { class: 'lab', 'text-anchor': 'start' }, fSvg);
+  const tMulY = svgEl('text', { class: 'mult', 'text-anchor': 'end' }, fSvg);
+  const tMulH = svgEl('text', { class: 'mult soft', 'text-anchor': 'start' }, fSvg);
+  tMulY.textContent = '3 : 1';
+  tMulH.textContent = 'under 1 : 1';
+
+  let mulYW = 30, mulHW = 72;
+  function measure() {
+    try {
+      mulYW = tMulY.getComputedTextLength() || mulYW;
+      mulHW = tMulH.getComputedTextLength() || mulHW;
+    } catch (e) { /* keep fallbacks */ }
+  }
+
+  function drawFlow(n) {
+    const W = flowBox.clientWidth;
+    if (!W) return;
+    const narrow = W < 520;
+    const barH = narrow ? 18 : 20;
+    const flowH = narrow ? 84 : 104;
+    const yDimA = 23, yA = 39, yB = yA + barH + flowH, yDimB = yB + barH + 14;
+    const H = yDimB + 42;
+    fSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    fSvg.setAttribute('width', W);
+    fSvg.setAttribute('height', H);
+
+    const m = model(n);
+    const unit = (W - 12) / 300;                  // room for up to 300%
+    const wA = 100 * unit, xA = (W - wA) / 2, yw = m.zone * unit;
+    const wB = m.effect * unit, xB = (W - wB) / 2;
+    const ybw = m.creativeOut * unit, hbw = m.buildOut * unit;
+    const y1 = yA + barH, y2 = yB, ym = (y1 + y2) / 2;
+
+    fBandY.setAttribute('d', bandPath(xA, xA + yw, xB, xB + ybw, y1, y2));
+    fBandH.setAttribute('d', bandPath(xA + yw, xA + wA, xB + ybw, xB + wB, y1, y2));
+    fEdges.setAttribute('d',
+      edgePath(xA, xB, y1, y2) + edgePath(xA + yw, xB + ybw, y1, y2) + edgePath(xA + wA, xB + wB, y1, y2));
+
+    setRect(fAY, xA, yA, yw, barH);
+    setRect(fAH, xA + yw, yA, wA - yw, barH);
+    fADiv.setAttribute('d', `M${f(xA + yw)},${yA}V${yA + barH}`);
+    setRect(fAO, xA, yA, wA, barH);
+
+    setRect(fBY, xB, yB, ybw, barH);
+    setRect(fBH, xB + ybw, yB, hbw, barH);
+    fBDiv.setAttribute('d', `M${f(xB + ybw)},${yB}V${yB + barH}`);
+    setRect(fBO, xB, yB, wB, barH);
+
+    fDimA.setAttribute('d', dimPath([xA, xA + wA], yDimA, yA - 3));
+    place(tDimA, W / 2, yDimA - 9);
+    setText(tDimA, '100% of our energy');
+
+    fDimB.setAttribute('d', dimPath([xB, xB + wB], yDimB, yB + barH + 3));
+    place(tDimB, W / 2, yDimB + 17);
+    setText(tDimB, `What it produces: ${Math.round(m.effect)}%`);
+
+    const np = Math.round(n);
+    place(tNote, W / 2, yDimB + 34);
+    setText(tNote, np <= 1 ? "Exactly one project's worth" : `Enough create & connect for ${np} projects`);
+
+    const zr = Math.round(m.zone);
+    place(tIn, xA - 9, yA + barH / 2 + 4.5);
+    setText(tIn, `${zr}% in our zone`);
+    if (tIn.getComputedTextLength() > xA - 11) setText(tIn, `${zr}%`);
+    place(tOut, xA + wA + 9, yA + barH / 2 + 4.5);
+    setText(tOut, `${100 - zr}% outside it`);
+    if (xA + wA + 9 + tOut.getComputedTextLength() > W - 2) setText(tOut, `${100 - zr}%`);
+    tOut.style.opacity = m.out < 0.5 ? '0' : '1';
+
+    place(tMulY, Math.max(mulYW + 2, (xA + xB) / 2 - 9), ym + 4.5);
+    place(tMulH, Math.min(W - mulHW - 2, (xA + wA + xB + wB) / 2 + 9), ym + 4.5);
+    tMulH.style.opacity = m.out < 15 ? '0' : '1';
+  }
+
+  /* ---------------- Drawing: a street of projects ---------------- */
+  const SHAPES = [
+    { o: 'M9 41V22H5L24 7L43 22H39V41Z', d: 'M21 41V32H27V41', w: [[12.5, 25, 5.5, 5], [30, 25, 5.5, 5]], top: 7 },   // gable
+    { o: 'M7 41L24 6L41 41Z', d: 'M21 41V33H27V41M13.5 30H34.5', w: [[21.5, 20, 5, 6]], top: 6 },                         // A-frame
+    { o: 'M8 41V20L40 13V41Z', d: 'M30 41V31H36V41', w: [[12.5, 25, 12, 7]], top: 13 },                                   // shed roof
+    { o: 'M13 41V17L24 7L35 17V41Z', d: 'M21.5 41V33H26.5V41M13 26H35', w: [[16.5, 19, 4.5, 5], [27, 19, 4.5, 5]], top: 7 }, // two storey
+    { o: 'M7 41V25L12 16L24 10L36 16L41 25V41Z', d: 'M18 41V29H30V41M18 29L30 41M30 29L18 41', w: [[22, 18, 4, 4]], top: 10 } // barn
+  ];
+  const ORDER = [0, 2, 1, 3, 4, 2, 0, 4, 1, 3, 1, 3, 0, 4, 2];
+  const houses = [];
+  for (let i = 0; i < MAX_N; i++) {
+    const s = SHAPES[ORDER[i % ORDER.length]];
+    const svg = svgEl('svg', { viewBox: '0 0 48 44', class: 'house', 'aria-hidden': 'true', focusable: 'false' }, street);
+    const defs = svgEl('defs', null, svg);
+    const cp = svgEl('clipPath', { id: 'hc' + i }, defs);
+    svgEl('path', { d: s.o }, cp);
+    const g = svgEl('g', { 'clip-path': `url(#hc${i})` }, svg);
+    svgEl('rect', { class: 'h-tint', x: 0, y: 0, width: 48, height: 41 }, g);
+    const hatch = svgEl('rect', { class: 'h-hatch', fill: 'url(#hatch)', x: 0, y: 41, width: 48, height: 41 }, g);
+    svgEl('line', { class: 'ground', x1: -1, y1: 41, x2: 49, y2: 41 }, svg);
+    svgEl('path', { class: 'h-line', d: s.o }, svg);
+    svgEl('path', { class: 'h-detail', d: s.d }, svg);
+    for (const [x, y, w, h] of s.w) svgEl('rect', { class: 'h-win', x, y, width: w, height: h }, svg);
+    houses.push({ el: svg, hatch, top: s.top, state: '', p: -1 });
+  }
+
+  // Projects this year: each takes `months`, starting staggered so the last one lands in December.
+  function updateHouses(t, n) {
+    const T = model(n).months;
+    let done = 0;
+    for (let i = 0; i < MAX_N; i++) {
+      const h = houses[i];
+      let state, p = 0;
+      if (i >= n) {
+        state = 'reach';
+      } else {
+        const end = n === 1 ? 12 : T + (12 - T) * i / (n - 1);
+        p = clamp((t - (end - T)) / T, 0, 1);
+        if (t >= end - 1e-6) { state = 'done'; p = 1; done++; }
+        else state = p > 0 ? 'building' : 'waiting';
+      }
+      if (state !== h.state) {
+        if (h.state) h.el.classList.remove(h.state);
+        h.el.classList.add(state);
+        h.state = state;
+      }
+      if (Math.abs(p - h.p) > 0.0005) {
+        h.hatch.setAttribute('y', f(41 - p * (41 - h.top)));
+        h.p = p;
+      }
+    }
+    return done;
+  }
+
+  /* ---------------- Words that follow the fader ---------------- */
+  let nTarget = clamp(Math.round(+fader.value) || 1, 1, MAX_N);
+  let nShown = nTarget;
+
+  function onTarget() {
+    const n = nTarget, m = model(n);
+    const z = Math.round(m.zone), d = Math.round(m.share * 100), e = Math.round(m.effect);
+    let rd, cap, out;
+    if (n === 1) {
+      rd = 'Just us, carrying all of it.';
+      cap = `Doing everything ourselves, only ${z}% of our energy goes to what we do best. What we gain there, we lose on the rest, so 100% in gives 100% out.`;
+      out = 'One project a year, and it takes all year.';
+    } else if (n === MAX_N) {
+      rd = 'Partners carry all of the build & manage. We stay in our zone.';
+      cap = `All of our energy goes to what we do best, and partners carry the rest in their own zone. 100% in gives ${e}% out.`;
+      out = `${n} projects a year, about ${oneDecimal(m.months)} months each.`;
+    } else {
+      rd = `Partners carry ${d}% of the build & manage.`;
+      cap = `With partners carrying ${d}% of the build & manage, ${z}% of our energy goes to what we do best. 100% in gives ${e}% out.`;
+      out = `${n} projects a year, about ${oneDecimal(m.months)} months each.`;
+    }
+    setText(readoutText, rd);
+    setText(caption, cap);
+    setText(outcome, out);
+    fader.style.setProperty('--frac', ((n - 1) / (MAX_N - 1)).toFixed(4));
+    fader.setAttribute('aria-valuetext',
+      `${n} ${n === 1 ? 'project' : 'projects'} a year. Partners carry ${d}% of the build and manage work, and ${z}% of our energy is in our zone.`);
+    fSvg.setAttribute('aria-label',
+      `Our energy: ${z}% on create and connect at 3 to 1, ${100 - z}% on build and manage at under 1 to 1. Together it produces ${e}%.`);
+  }
+
+  /* ---------------- The year clock and the render loop ---------------- */
+  const YEAR_MS = 8000, HOLD_MS = 1700, FADE_MS = 260;
+  let t = reduceMotion ? 12 : 0;              // months into the year
+  let phase = reduceMotion ? 'hold' : 'run';
+  let holdLeft = HOLD_MS;
+  let playing = !reduceMotion;
+  let looping = false, last = 0;
+  let drawDirty = true, drawnN = -1, lastDone = -1;
+
+  function advance(dt) {
+    if (phase === 'run') {
+      t += (dt / YEAR_MS) * 12;
+      if (t >= 12) { t = 12; phase = 'hold'; holdLeft = HOLD_MS; }
+    } else {
+      holdLeft -= dt;
+      if (holdLeft <= FADE_MS) street.classList.add('fading');
+      if (holdLeft <= 0) { t = 0; phase = 'run'; street.classList.remove('fading'); }
+    }
+  }
+
+  function render() {
+    if (drawDirty || nShown !== drawnN) {
+      drawFlow(nShown);
+      drawAnatomy(model(nShown).share);
+      drawnN = nShown;
+      drawDirty = false;
+    }
+    const done = updateHouses(t, nTarget);
+    const pct = (t / 12) * 100;
+    axisFill.style.width = pct + '%';
+    axisMark.style.left = pct + '%';
+    if (done !== lastDone) { countEl.innerHTML = `<b>${done}</b> finished`; lastDone = done; }
+  }
+
+  function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+    if (nShown !== nTarget) {
+      const k = reduceMotion ? 1 : 1 - Math.exp(-dt / 110);
+      nShown += (nTarget - nShown) * k;
+      if (Math.abs(nTarget - nShown) < 0.003) nShown = nTarget;
+    }
+    if (playing) advance(dt);
+    render();
+    if (playing || nShown !== nTarget) requestAnimationFrame(frame);
+    else looping = false;
+  }
+  function ensureLoop() {
+    if (looping) return;
+    looping = true;
+    last = performance.now();
+    requestAnimationFrame(frame);
+  }
+
+  function restartYear() {
+    if (!playing || reduceMotion) return;
+    street.classList.add('fading');
+    setTimeout(() => { t = 0; phase = 'run'; street.classList.remove('fading'); }, 170);
+  }
+
+  function setPlaying(v) {
+    playing = v;
+    playBtn.classList.toggle('paused', !v);
+    playBtn.setAttribute('aria-label', v ? 'Pause the year' : 'Play the year');
+    if (v && phase === 'hold') holdLeft = Math.min(holdLeft, FADE_MS);
+    ensureLoop();
+  }
+
+  /* ---------------- Events ---------------- */
+  fader.addEventListener('input', () => {
+    nTarget = clamp(Math.round(+fader.value), 1, MAX_N);
+    band.classList.remove('untouched');
+    onTarget();
+    ensureLoop();
+  });
+  fader.addEventListener('change', restartYear);
+  fader.addEventListener('pointerdown', () => band.classList.remove('untouched'));
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+
+  const hint = $('hint');
+  new MutationObserver(() => { if (!band.classList.contains('untouched')) hint.remove(); })
+    .observe(band, { attributes: true, attributeFilter: ['class'] });
+
+  function redraw() { drawDirty = true; if (!looping) render(); }
+  if ('ResizeObserver' in window) {
+    let lastW = 0;
+    new ResizeObserver((entries) => {
+      const w = entries[0].contentRect.width;
+      if (Math.abs(w - lastW) > 0.5) { lastW = w; redraw(); }
+    }).observe(flowBox);
+  } else {
+    window.addEventListener('resize', redraw);
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); redraw(); });
+
+  const sentinel = $('sentinel');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      band.classList.toggle('stuck', !entry.isIntersecting && entry.boundingClientRect.top < 0);
+    }).observe(sentinel);
+  }
+
+  if (!playing) { playBtn.classList.add('paused'); playBtn.setAttribute('aria-label', 'Play the year'); }
+  measure();
+  onTarget();
+  render();
+  if (playing) ensureLoop();
+})();
+</script>
+</body>
+</html>
